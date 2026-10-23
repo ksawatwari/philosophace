@@ -5,13 +5,15 @@ import type { Metadata } from "next";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { Clock } from "lucide-react";
-import { getAllDebates, getDebate, DEBATE_KINDS } from "@/lib/debates";
+import { getAllDebates, getDebate } from "@/lib/debates";
+import { DEBATE_KINDS } from "@/lib/debate-kinds";
 import { getAllEntries } from "@/lib/content";
 import { getAllTerms } from "@/lib/glossary";
 import { CATEGORY_ICONS, categoryLabel, topicsOf } from "@/lib/taxonomy";
 import { CitePopover, QuoteCard, Trivia, TermPopover } from "@/components/mdx";
 import { DebatePoll } from "@/components/DebatePoll";
 import { ReadingProgress } from "@/components/ReadingProgress";
+import { VisitTracker } from "@/components/VisitTracker";
 import { Icon } from "@/components/Icon";
 
 export const dynamicParams = false;
@@ -43,6 +45,7 @@ export default function DebatePage({ params }: { params: { slug: string } }) {
   return (
     <>
       <ReadingProgress />
+      <VisitTracker type="debate" slug={meta.slug} />
       <article className="mx-auto max-w-reading">
         <Link href="/debates" className="text-sm text-lapis underline underline-offset-4">← ข้อโต้แย้งและการทดลองทางความคิด</Link>
         <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
