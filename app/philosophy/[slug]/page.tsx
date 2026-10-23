@@ -7,7 +7,9 @@ import remarkGfm from "remark-gfm";
 import { CalendarDays, Clock, BookOpen, ListTree, Hourglass, Globe } from "lucide-react";
 import { getAllEntries, getEntry } from "@/lib/content";
 import { getAllTerms } from "@/lib/glossary";
-import { getAllDebates, DEBATE_KINDS } from "@/lib/debates";
+import { getAllDebates, relatedDebatesFor } from "@/lib/debates";
+import { DebateCards } from "@/components/DebateCards";
+import { VisitTracker } from "@/components/VisitTracker";
 import { buildGraph } from "@/lib/graph";
 import { CATEGORY_ICONS, categoryLabel } from "@/lib/taxonomy";
 import { CitePopover, QuoteCard, Trivia, TermPopover } from "@/components/mdx";
@@ -58,12 +60,13 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     h2: (p: React.ComponentProps<"h2">) => <h2 id={slugify(String(p.children))} {...p} />,
   };
   const relatedTerms = terms.filter((t) => t.related_thinkers.includes(meta.slug)).map((t) => ({ slug: t.slug, term_th: t.term_th }));
-  const debatesOf = debates.filter((d) => d.key_figures.includes(meta.slug));
+  const rel = relatedDebatesFor(debates, meta.slug, meta.branch, meta.categories);
   const link = (s: string, i: number) => <span key={s}>{i > 0 && ", "}{exists(s) ? <Link className="text-lapis underline underline-offset-2" href={`/philosophy/${s}`}>{nameOf(s)}</Link> : nameOf(s)}</span>;
 
   return (
     <>
       <ReadingProgress />
+      <VisitTracker type="thinker" slug={meta.slug} />
       <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[minmax(0,46rem)_14rem] lg:justify-center lg:gap-14">
         <article className="min-w-0">
           <header>
@@ -105,12 +108,8 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
           <MiniGraph centerId={meta.slug} data={graph} terms={relatedTerms} />
 
-          {debatesOf.length > 0 && (
-            <section className="mt-8" aria-label="ข้อโต้แย้งที่เกี่ยวข้อง">
-              <h2 className="text-lg font-bold">ข้อโต้แย้งและการทดลองทางความคิดที่เกี่ยวข้อง</h2>
-              <ul className="mt-2 flex flex-wrap gap-2 text-sm">{debatesOf.map((d) => <li key={d.slug}><Link href={`/debates/${d.slug}`} className="rounded-full border border-accent/40 bg-accent/5 px-3 py-1 text-accent hover:bg-accent/15">{d.title} <span className="opacity-70">· {DEBATE_KINDS[d.kind]}</span></Link></li>)}</ul>
-            </section>
-          )}
+          <DebateCards debates={rel.items} title="ข้อโต้แย้งและการทดลองทางความคิดที่เกี่ยวข้อง"
+            note={rel.direct ? `นักคิดคนนี้มีบทบาทใน ${rel.items.length} เรื่อง ลองตัดสินใจก่อนแล้วดูว่าเขาคิดอย่างไร` : "ยังไม่มีข้อโต้แย้งที่ระบุชื่อนักคิดคนนี้โดยตรง จึงแสดงหัวข้อที่ใกล้เคียงกันแทน"} />
 
           {meta.citations.length > 0 && (
             <section className="mt-14 border-t border-line pt-6">
