@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Search, Swords, FlaskRound, Scale, MessageSquareQuote } from "lucide-react";
 import type { Debate } from "@/lib/debates";
-import { DEBATE_KINDS } from "@/lib/debates";
+import { DEBATE_KINDS } from "@/lib/debate-kinds";
 import { TOPICS, topicsOf } from "@/lib/taxonomy";
 import { Icon } from "./Icon";
 
