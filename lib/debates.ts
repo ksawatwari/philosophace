@@ -1,6 +1,6 @@
 // lib/debates.ts — การทดลองทางความคิด ข้อขัดแย้ง ปัญหาลำบากใจเชิงจริยธรรม และข้อถกเถียงคลาสสิก (ฝั่งเซิร์ฟเวอร์)
-import fs from "node:fs";
-import path from "node:path";
+import fs from "fs";
+import path from "path";
 import matter from "gray-matter";
 import { z } from "zod";
 import { CATEGORY_SLUGS } from "./taxonomy";
